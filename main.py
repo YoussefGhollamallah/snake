@@ -4,7 +4,7 @@ from pygame.math import Vector2
 pygame.init()
 
 class SNAKE:
-    def __init__(self):
+    def __init__(self):  # permet d'initialiser le serpent dans la fenêtre et d'uploader les variables d'affichage du corp du serpent
         self.body = [Vector2(7,10),Vector2(6,10),Vector2(5,10)]
         self.direction = Vector2(1,0)
         self.new_block = False
@@ -28,10 +28,11 @@ class SNAKE:
         self.body_bl = pygame.image.load('images/body_bl.png').convert_alpha()
         self.crunch_sound = pygame.mixer.Sound('son/crunch.wav')
 
-    def draw_snake(self):
+    def afficher_snake(self): # permet d'afficher le serpent
         self.update_head_graphics()
-        self.update_tail_graphics()
+        self.update_corp_graphics()
 
+        # boucle qui permet d'afficher les block du serpent tête corp et queue en fonction de la route prise
         for index, block in enumerate(self.body):
             x_pos = int(block.x * cell_size)
             y_pos = int(block.y * cell_size)
@@ -63,14 +64,14 @@ class SNAKE:
             # block_rect = pygame.Rect(x_pos,y_pos, cell_size, cell_size)
             # pygame.draw.rect(screen,bleu, block_rect)
 
-    def update_head_graphics(self):
+    def update_head_graphics(self): # permet de mettre a jour l'affichage de la tête
         head_relation = self.body[1] - self.body[0]
         if head_relation == Vector2(1,0): self.head = self.head_left
         elif head_relation == Vector2(-1,0): self.head = self.head_right
         elif head_relation == Vector2(0,1): self.head = self.head_up
         elif head_relation == Vector2(0,-1): self.head = self.head_down
 
-    def update_tail_graphics(self):
+    def update_corp_graphics(self): # permet de mettre a jour l'affichage du corp
         tail_relation = self.body[-2] - self.body[-1]
         if tail_relation == Vector2(1,0): self.tail = self.tail_left
         elif tail_relation == Vector2(-1,0): self.tail = self.tail_right
@@ -105,12 +106,12 @@ class FRUIT:
     def __init__(self):
         self.randomize()
 
-    def draw_fruit(self):
+    def afficher_pomme(self):
         fruit_rect = pygame.Rect(int(self.pos.x * cell_size ), int(self.pos.y * cell_size), cell_size , cell_size)
         screen.blit(pomme, fruit_rect)
         
 
-    def randomize(self):
+    def randomize(self): 
         self.x = random.randint(0,cell_number -1)
         self.y = random.randint(0,cell_number_heigth -1 )
         self.pos = Vector2(self.x, self.y)
@@ -127,10 +128,10 @@ class MAIN:
         
 
     def draw_elements(self):
-        self.draw_grass()
-        self.fruit.draw_fruit()
-        self.snake.draw_snake()
-        self.draw_score()
+        self.afficher_herbe()
+        self.fruit.afficher_pomme()
+        self.snake.afficher_snake()
+        self.afficher_score()
 
     def check_colision(self): # fonction qui permet de vérifier que la pomme à étais mangé par le serpent et la replace aléatoirement sur l'écran
         if self.fruit.pos == self.snake.body[0]:
@@ -139,9 +140,11 @@ class MAIN:
             self.snake.play_crunch_sound()
 
     def check_fail(self):
+        # condition qui permet de vérifié et quitte le jeu si le serpent touche le bord de la fenêtre
         if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number_heigth:
            self.game_over()
 
+        # condition qui permet de vérifié et quitte le jeu si le serpent touche une autre partie de sont corp
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
                 self.game_over()
@@ -151,7 +154,7 @@ class MAIN:
         pygame.quit()
         sys.exit()
 
-    def draw_grass(self):
+    def afficher_herbe(self):
         grass_color = (165,209,61)
         for row in range(cell_number):
             if row % 2 == 0: 
@@ -165,7 +168,7 @@ class MAIN:
                         grass_rect = pygame.Rect(col * cell_size,row * cell_size,cell_size,cell_size)
                         pygame.draw.rect(screen,grass_color,grass_rect)
 
-    def draw_score(self):
+    def afficher_score(self):
         score_text = str(len(self.snake.body) - 3)
         score_surface = game_font.render(score_text,True,(56,74,12))
         score_x = int(cell_size * cell_number - 60)
