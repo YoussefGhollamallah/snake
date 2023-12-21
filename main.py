@@ -226,10 +226,6 @@ while True:
     pygame.display.update() # Mise à jour de la boucle
     clock.tick(60)
 
-pygame.quit()
-
-
-
 
 
 ############ LE CODE EN DESSOUS ETAIS UN TEST #############
