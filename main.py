@@ -124,11 +124,13 @@ class MAIN:
         self.snake.move_snake()
         self.check_colision()
         self.check_fail()
-        self.draw_score()
+        
 
     def draw_elements(self):
+        self.draw_grass()
         self.fruit.draw_fruit()
         self.snake.draw_snake()
+        self.draw_score()
 
     def check_colision(self): # fonction qui permet de vérifier que la pomme à étais mangé par le serpent et la replace aléatoirement sur l'écran
         if self.fruit.pos == self.snake.body[0]:
@@ -150,7 +152,7 @@ class MAIN:
         sys.exit()
 
     def draw_grass(self):
-        grass_color = (167,209,61)
+        grass_color = (165,209,61)
         for row in range(cell_number):
             if row % 2 == 0: 
                 for col in range(cell_number):
@@ -167,7 +169,7 @@ class MAIN:
         score_text = str(len(self.snake.body) - 3)
         score_surface = game_font.render(score_text,True,(56,74,12))
         score_x = int(cell_size * cell_number - 60)
-        score_y = int(cell_size * cell_number - 40)
+        score_y = int(cell_size * cell_number_heigth - 40)
         score_rect = score_surface.get_rect(center = (score_x,score_y))
         apple_rect = pomme.get_rect(midright = (score_rect.left,score_rect.centery))
         bg_rect = pygame.Rect(apple_rect.left,apple_rect.top,apple_rect.width + score_rect.width + 6,apple_rect.height)
